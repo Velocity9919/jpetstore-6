@@ -33,9 +33,9 @@ pipeline{
             }
         }
 
-        stage ('Build war file'){
+        stage ('maven package'){
             steps{
-                sh 'mvn clean install -DskipTests=true'
+                sh 'mvn clean package -DskipTests=true'
             }
         }
 
@@ -79,6 +79,14 @@ pipeline{
         stage('TRIVY'){
             steps{
                 sh "trivy image nareshbabu1991/petshop:latest > trivy.txt"
+            }
+        }
+
+        stage('deploy to tomcat'){
+            steps{
+                sshagent(['tomcat-privatekey']) {
+                    sh "scp -o StrictHostKeyChecking=no target/jpetstore.war ubuntu@172.31.41.55:8080:/opt/tomcat/webapps"
+                }
             }
             post {
                 always {
