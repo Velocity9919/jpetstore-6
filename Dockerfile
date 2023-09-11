@@ -14,11 +14,8 @@
 #    limitations under the License.
 #
 
-# Use an official Apache Tomcat image as a base
-FROM tomcat:9.0
-
-# Copy the packaged WAR file into the webapps directory of Tomcat
-COPY target/jpetstore.war /opt/tomcat/webapps/
-
-# Expose port 8080 (Tomcat's default port)
-EXPOSE 8080
+FROM openjdk:17.0.2
+COPY . /usr/src/myapp
+WORKDIR /usr/src/myapp
+RUN ./mvnw clean package
+CMD ./mvnw cargo:run -P tomcat90
