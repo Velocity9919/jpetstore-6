@@ -80,6 +80,13 @@ pipeline{
             steps{
                 sh "trivy image nareshbabu1991/petshop:latest > trivy.txt"
             }
+        }
+
+        stage('Trigger deployment'){
+            steps{
+                    build job: 'CD-petshop', wait: true 
+                    // Trigger the deployment pipeline and wait for it to complete
+                }
             post {
                 always {
                     emailext attachLog: true,
