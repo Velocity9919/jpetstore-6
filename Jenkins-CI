@@ -84,7 +84,7 @@ pipeline{
 
         stage('Trigger deployment'){
             steps{
-                    build job: 'CD-petshop', wait: true 
+                    build job: 'Jenkins-CD', wait: true 
                     // Trigger the deployment pipeline and wait for it to complete
                 }
             post {
