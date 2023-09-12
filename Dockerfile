@@ -18,7 +18,7 @@
 FROM tomcat:9.0
 
 # Copy the packaged WAR file into the webapps directory of Tomcat
-COPY target/jpetstore.war /usr/local/tomcat/webapps/
+COPY target/jpetstore.war /opt/tomcat/webapps/
 
 # Expose port 8080 (Tomcat's default port)
 EXPOSE 8080
