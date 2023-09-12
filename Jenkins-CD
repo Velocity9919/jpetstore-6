@@ -1,0 +1,40 @@
+pipeline{
+    agent any
+    stages{
+        stage ('clean Workspace'){
+            steps{
+                cleanWs()
+            }
+        }
+        stage ('checkout scm') {
+            steps {
+                git branch: 'master', url: 'https://github.com/Velocity9919/jpetstore-6.git'
+            }
+        }
+        stage ('Deploy to container'){
+            steps{
+                sh 'docker run -d --name pet1 -p 8080:8082 nareshbabu1991/petshop:latest'
+            }
+        }
+        stage('K8s'){
+            steps{
+                script{
+                    withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+                        sh 'kubectl apply -f deployment.yaml'
+                    }
+                }
+            }
+        }
+    }
+    post {
+     always {
+        emailext attachLog: true,
+            subject: "'${currentBuild.result}'",
+            body: "Project: ${env.JOB_NAME}<br/>" +
+                "Build Number: ${env.BUILD_NUMBER}<br/>" +
+                "URL: ${env.BUILD_URL}<br/>",
+            to: 'ynareshbabu1991@gmail.com',
+            attachmentsPattern: 'trivy.txt'
+        }
+    }
+}
