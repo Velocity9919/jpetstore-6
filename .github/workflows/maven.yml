@@ -52,21 +52,13 @@ jobs:
           assets: extension=war
           filename: ./target/jpetstore.war
 
-      - name: Tomcat Deploy
-        uses: actions/ghaction-tomcat@v3
+      - name: Deploy to Tomcat
+        uses: crazy-max/ghaction-tomcat@v3
         with:
-          # Tomcat Server URL
-          server-url: http://13.234.59.141:8080
-          # Tomcat Server Port (default 8080)
-          port: 8080
-          # Username to connect to Tomcat Server (use secrets)
-          username: ${{ secrets.TOMCAT_USERNAME }}
-          # Password to connect to Tomcat Server (use secrets)
-          password: ${{ secrets.TOMCAT_PASSWORD }}
-          # War file to deploy (e.g. ./target/app.war)
-          war-file: ./target/jpetstore.war
-          # Context path to deploy (default /)
-          context-path: /
+          server-url: 'http://13.234.59.141:8080/manager/text' # Change to your Tomcat Manager URL
+          server-username: ${{ secrets.TOMCAT_USERNAME }} # Create these secrets in your GitHub repository settings
+          server-password: ${{ secrets.TOMCAT_PASSWORD }}
+          war-file: './target/jpetstore.war' # Path to your WAR file
     
       - name: Build & push Docker image
         uses: mr-smithers-excellent/docker-build-push@v6
