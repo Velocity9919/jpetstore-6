@@ -1,0 +1,79 @@
+name: Java CI with Maven
+on:
+  push:
+    branches:
+      - master # the name of your main branch
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      
+      - name: Cache SonarQube packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      
+      - name: Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+
+      - name: Nexus Repo Publish
+        uses: sonatype-nexus-community/nexus-repo-github-action@master
+        with:
+          serverUrl: http://13.232.237.180:8081
+          username: admin
+          password: ${{ secrets.NEXUS_PASSWORD }}
+          format: maven2
+          repository: maven-github-actions
+          coordinates: groupId=org.mybatis artifactId=jpetstore version=6.1.1
+          assets: extension=war
+          filename: ./target/jpetstore.war
+
+      - name: Tomcat Deploy
+        uses: jkandasa/tomcat-deploy@v1.0.0
+        with:
+          # Tomcat Server URL
+          server-url: http://13.234.59.141:8080
+          # Tomcat Server Port (default 8080)
+          port: 8080
+          # Username to connect to Tomcat Server (use secrets)
+          username: ${{ secrets.TOMCAT_USERNAME }}
+          # Password to connect to Tomcat Server (use secrets)
+          password: ${{ secrets.TOMCAT_PASSWORD }}
+          # War file to deploy (e.g. ./target/app.war)
+          war-file: ./target/jpetstore.war
+          # Context path to deploy (default /)
+          context-path: /
+    
+      - name: Build & push Docker image
+        uses: mr-smithers-excellent/docker-build-push@v6
+        with:
+          image: nareshbabu1991/jpetstore # create new repo on dockerhub with the jar name
+          tags: latest
+          registry: docker.io
+          dockerfile: Dockerfile
+          username: ${{ secrets.DOCKER_USERNAME }}  # update docker credentials on github/seetings/secrets
+          password: ${{ secrets.DOCKER_PASSWORD }}
