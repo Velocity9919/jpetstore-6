@@ -53,7 +53,7 @@ jobs:
           filename: ./target/jpetstore.war
 
       - name: Tomcat Deploy
-        uses: crazy-max/ghaction-tomcat@v3
+        uses: actions/ghaction-tomcat@v3
         with:
           # Tomcat Server URL
           server-url: http://13.234.59.141:8080
