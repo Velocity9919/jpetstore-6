@@ -1,16 +1,13 @@
 
-![image](https://github.com/Velocity9919/jpetstore-6/assets/143435067/c9910393-bc74-433b-a77e-97465e0b86b1)
-
-
 ## Jenkins Ci-Cd With Ansible - DevSecOps Petshop project
 
-![image](https://github.com/Velocity9919/jpetstore-6/assets/143435067/37e105e5-b848-42f4-907b-b8c18d505976)
+![image](https://github.com/Velocity9919/jpetstore-6/assets/143435067/c9910393-bc74-433b-a77e-97465e0b86b1)
 
-STEPS:
+# STEPS:
 
 # STEP1:Create an Ubuntu(22.04) T2 Large Instance
 
-![image](https://github.com/Velocity9919/jpetstore-6/assets/143435067/642586e9-5214-462f-a700-6fb426015f7f)
+![image](https://github.com/Velocity9919/jpetstore-6/assets/143435067/37e105e5-b848-42f4-907b-b8c18d505976)
 
 # Step 2 — Install Jenkins, Docker and Trivy
 
@@ -66,6 +63,8 @@ Now, grab your Public IP Address
 <EC2 Public IP Address:8090>
 sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 ````
+
+![image](https://github.com/Velocity9919/jpetstore-6/assets/143435067/642586e9-5214-462f-a700-6fb426015f7f)
 
 ![image](https://github.com/Velocity9919/jpetstore-6/assets/143435067/3ebd759b-ffed-4504-9c6f-8b012dea5d59)
 
